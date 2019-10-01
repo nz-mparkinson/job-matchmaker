@@ -24,7 +24,7 @@ if "UserID" in arguments:
     userID = arguments["UserID"].value
 
 #Print a JSON header
-print("Content-Type: text/json\n\n")
+print("Content-Type: text/json\n")
 
 try:
     #Connect to the database

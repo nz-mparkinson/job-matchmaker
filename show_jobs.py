@@ -27,7 +27,7 @@ if "IncludeOldResults" in arguments:
     includeOldResults = arguments["IncludeOldResults"].value
 
 #Print a JSON header
-print("Content-Type: text/json\n\n")
+print("Content-Type: text/json\n")
 
 try:
     #Connect to the database

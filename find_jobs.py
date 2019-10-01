@@ -219,7 +219,7 @@ if "SearchString" in arguments:
     searchString = arguments["SearchString"].value
 
 #Print a JSON header
-print("Content-Type: text/json\n\n")
+print("Content-Type: text/json\n")
 
 try:
     #Connect to the database
