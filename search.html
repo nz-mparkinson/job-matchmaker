@@ -1,0 +1,48 @@
+<html>
+	<head>
+		<title>Search</title>
+		<link rel="stylesheet" type="text/css" href="search.css">
+		<script type="text/javascript" src="search.js"></script>
+	</head>
+	<body>
+		<form>
+			Country: 
+			<select id="country" onchange="saveSettings()">
+				<option value="de">Germany</option>
+				<option value="nz">New Zealand</option>
+			</select>
+			
+			Include Old Results:
+			<input type="checkbox" id="includeOldResults" onchange="saveSettings()">
+			
+			<button type="button" onclick="addSearch(true)">Add Search</button>
+			<button type="button" onclick="removeSearch()">Remove Search</button>
+			<button type="button" onclick="search()">Find Jobs</button>
+
+			<table id="searches">
+				<tr>
+					<td>Search</td>
+					<td>Location</td>
+					<td>Radius</td>
+					<td class="found">Jobs Found</td>
+				</tr>
+				<tr id="search1">
+					<td><input type="text" id="searchString1" value="experience "></td>
+					<td><input type="text" id="location1" value="Berlin"></td>
+					<td><input type="number" id="radius1" value="100" max="100"></td>
+					<td class="found" id="found1"></td>
+				</tr>
+			</table>
+		</form>
+
+		<table id="jobs">
+			<tr>
+				<td>Title</td>
+				<td>Company</td>
+				<td>Posted</td>
+				<td>Summary</td>
+				<td>Rate Job Match</td>
+			</tr>
+		</table>
+	</body>
+</html>
