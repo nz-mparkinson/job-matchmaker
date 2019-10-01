@@ -1,4 +1,4 @@
-#!/usr/bin/python36
+#!/usr/bin/python3
 
 #Import libraries
 from bs4 import BeautifulSoup
