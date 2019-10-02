@@ -1,0 +1,65 @@
+---
+- name: Install, enable and start PostgreSQL
+  hosts: databaseservers
+  remote_user: root
+  vars:
+    http_port: 80
+    max_clients: 200
+
+  tasks:
+  - name: Install common packages
+    yum:
+      name:
+        - dos2unix               #Converting dos files to unix
+        - gcc                    #Required to compile Python modules
+        - mlocate                #locate command
+        - net-tools              #ifconfig command
+        - policycoreutils-python #semanage command
+        - vim
+      state: latest
+  - name: Install PostgreSQL
+    yum:
+      name:
+        - postgresql
+        - postgresql-contrib
+        - postgresql-server
+      state: latest
+  - name: Enable the PostgreSQL daemon and ensure it is not masked
+    systemd:
+      name: postgresql
+      enabled: yes
+      masked: no
+  - name: Start PostgreSQL
+    service: name=postgresql state=started
+  - name: Configure firewalld to trust an IP range
+    firewalld:
+      source: 192.168.122.0/24
+      zone: trusted
+      permanent: yes
+      immediate: yes
+      state: enabled
+  - name: Configure firewalld to allow connections to PostgreSQL
+    firewalld:
+      port: 5432/tcp
+      zone: trusted
+      permanent: yes
+      immediate: yes
+      state: enabled
+  - name: Set the listen address for PostgreSQL
+    lineinfile:
+      path: /var/lib/pgsql/data/postgresql.conf
+      insertafter: '^#listen_addresses'
+      line: listen_addresses = '*'
+    notify:
+    - Restart PostgreSQL
+  - name: Set the connection method for PostgreSQL
+    lineinfile:
+      path: /var/lib/pgsql/data/pg_hba.conf
+      insertafter: '^# IPv4 local connections:'
+      line: host    all             all             192.168.122.0/24            md5
+    notify:
+    - Restart PostgreSQL
+
+  handlers:
+  - name: Restart PostgreSQL
+    service: name=postgresql state=restarted
