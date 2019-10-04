@@ -1,0 +1,8 @@
+---
+- name: Install all package updates
+  hosts: all
+  remote_user: root
+
+  tasks:
+  - name: Yum Update
+    yum: name=* state=latest update_cache=yes

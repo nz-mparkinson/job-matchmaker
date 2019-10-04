@@ -23,7 +23,12 @@
         - postgresql
         - postgresql-contrib
         - postgresql-server
+        - python-psycopg2        #Required for Ansible PostgreSQL modules
       state: latest
+  - name: Initialize PostgreSQL
+    command: postgresql-setup initdb creates=/var/lib/pgsql/data/pg_hba.conf
+    become: yes
+    become_user: postgres
   - name: Enable the PostgreSQL daemon and ensure it is not masked
     systemd:
       name: postgresql
@@ -59,7 +64,21 @@
       line: host    all             all             192.168.122.0/24            md5
     notify:
     - Restart PostgreSQL
-
+  - name: Create a job_matchmaker database
+    become: yes
+    become_user: postgres
+    postgresql_db:
+      name: job_matchmaker
+  - name: Create a job_matchmaker user
+    become: yes
+    become_user: postgres
+    postgresql_user:
+      db: job_matchmaker
+      name: job_matchmaker
+      password: md58a2f3fbe984a408333f1cff9df9322c3
+      priv: "ALL"
+      expires: infinity
+ 
   handlers:
   - name: Restart PostgreSQL
     service: name=postgresql state=restarted
