@@ -1,6 +1,6 @@
 ---
 - name: Install, enable and start Apache
-  hosts: webservers
+  hosts: web-servers
   remote_user: root
   vars:
     http_port: 80

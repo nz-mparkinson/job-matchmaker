@@ -1,10 +1,7 @@
 ---
 - name: Install, enable and start PostgreSQL
-  hosts: databaseservers
+  hosts: database-servers
   remote_user: root
-  vars:
-    http_port: 80
-    max_clients: 200
 
   tasks:
   - name: Install common packages
