@@ -1,0 +1,102 @@
+---
+- name: Install, enable and start Apache
+  hosts: web_servers
+  remote_user: centos
+  become: yes
+  become_method: sudo
+  vars:
+    http_port: 80
+    max_clients: 200
+
+  tasks:
+  - name: Install common packages
+    yum:
+      name:
+        - gcc                    #Required to compile Python modules
+        - mlocate                #locate command
+        - net-tools              #ifconfig command
+        - policycoreutils-python #semanage command
+        - vim
+      state: latest
+  - name: Install Apache
+    yum: name=httpd state=latest
+  - name: Enable the Apache daemon and ensure it is not masked
+    systemd:
+      name: httpd
+      enabled: yes
+      masked: no
+  - name: Start Apache
+    service: name=httpd state=started
+  - name: Install Python3
+    yum:
+      name:
+        - python3
+        - python3-devel
+      state: latest
+  - name: Install PostgreSQL
+    yum:
+      name:
+        - postgresql
+        - postgresql-devel
+      state: latest
+  - name: Install Python3 modules using Pip
+    script: /usr/bin/python3 -m pip install bs4 psycopg2 PyYAML
+#    pip:
+#      executable: python3
+#      name:
+#      - bs4
+#      - psycopg2
+#      - PyYAML
+  - name: Create a /var/www/python directory if it does not exist
+    file:
+      path: /var/www/python
+      owner: apache
+      group: apache
+      state: directory
+      mode: '0755'
+  - name: Recursively change ownership /var/www/python directory
+    file:
+      path: /var/www/python
+      state: directory
+      recurse: yes
+      owner: apache
+      group: apache
+  - name: Set SELinux booleans for Apache 1
+    script: /usr/sbin/setsebool -P allow_httpd_anon_write 1
+  - name: Set SELinux booleans for Apache 2
+    script: /usr/sbin/setsebool -P httpd_can_network_connect 1
+  - name: Set SELinux booleans for Apache 3
+    script: /usr/sbin/setsebool -P httpd_can_network_connect_db 1
+#    seboolean:
+#      name:
+#        - allow_httpd_anon_write
+#        - httpd_can_network_connect
+#        - httpd_can_network_connect_db
+#      state: yes
+#      persistent: yes
+  - name: Set SELinux context for /var/www/python
+    script: /usr/sbin/semanage fcontext -a -t httpd_sys_script_exec_t "/var/www/python(/.*)?"
+#    sefcontext:
+#      target: '/var/www/python(/.*)?'
+#      setype: httpd_sys_script_exec_t
+#      state: present
+  - name: Apply new SELinux file context to filesystem
+    command: restorecon -irv /var/www/python
+  - name: Write Apache config for Python
+    template:
+      src: python.j2
+      dest: /etc/httpd/conf.d/python.conf
+      owner: root
+      group: root
+      mode: '0644'
+    notify:
+    - Restart Apache
+#  - name: Set database_host in job_matchmaker.conf
+#    lineinfile:
+#      path: /var/www/python/job_matchmaker.conf
+#      insertafter: '^databaseHost:'
+#      line: 'databaseHost: $database_host'
+
+  handlers:
+  - name: Restart Apache
+    service: name=httpd state=restarted

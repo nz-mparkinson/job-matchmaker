@@ -1,0 +1,68 @@
+---
+- name: Install, enable and start PostgreSQL
+  hosts: database_servers
+  remote_user: centos
+  become: yes
+  become_method: sudo
+
+  tasks:
+  - name: Install common packages
+    yum:
+      name:
+        - gcc                    #Required to compile Python modules
+        - mlocate                #locate command
+        - net-tools              #ifconfig command
+        - policycoreutils-python #semanage command
+        - vim
+      state: latest
+  - name: Install PostgreSQL
+    yum:
+      name:
+        - postgresql
+        - postgresql-contrib
+        - postgresql-server
+        - python-psycopg2        #Required for Ansible PostgreSQL modules
+      state: latest
+  - name: Initialize PostgreSQL
+    command: postgresql-setup initdb creates=/var/lib/pgsql/data/pg_hba.conf
+    become: yes
+    become_user: postgres
+  - name: Enable the PostgreSQL daemon and ensure it is not masked
+    systemd:
+      name: postgresql
+      enabled: yes
+      masked: no
+  - name: Start PostgreSQL
+    service: name=postgresql state=started
+  - name: Set the listen address for PostgreSQL
+    lineinfile:
+      path: /var/lib/pgsql/data/postgresql.conf
+      insertafter: '^#listen_addresses'
+      line: listen_addresses = '*'
+    notify:
+    - Restart PostgreSQL
+  - name: Set the connection method for PostgreSQL
+    lineinfile:
+      path: /var/lib/pgsql/data/pg_hba.conf
+      insertafter: '^# IPv4 local connections:'
+      line: host    all             all             172.0.0.0/8            md5
+    notify:
+    - Restart PostgreSQL
+  - name: Create a job_matchmaker database
+    become: yes
+    become_user: postgres
+    postgresql_db:
+      name: job_matchmaker
+  - name: Create a job_matchmaker user
+    become: yes
+    become_user: postgres
+    postgresql_user:
+      db: job_matchmaker
+      name: job_matchmaker
+      password: md58a2f3fbe984a408333f1cff9df9322c3
+      priv: "ALL"
+      expires: infinity
+ 
+  handlers:
+  - name: Restart PostgreSQL
+    service: name=postgresql state=restarted
