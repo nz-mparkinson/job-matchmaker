@@ -44,7 +44,15 @@
 
 
 
-[web-servers]
-host1 ansible_ssh_host=192.168.122.71
-[database-servers]
-host2 ansible_ssh_host=192.168.122.209
+#Host groups
+[web_servers]
+host1 ansible_ssh_host=172.31.29.184
+[database_servers]
+host2 ansible_ssh_host=172.31.23.207
+
+#Host group variables
+[web_servers:vars]
+database_host=172.31.23.207
+
+
+

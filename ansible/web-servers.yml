@@ -1,6 +1,6 @@
 ---
 - name: Install, enable and start Apache
-  hosts: web-servers
+  hosts: web_servers
   remote_user: root
   vars:
     http_port: 80
@@ -10,7 +10,6 @@
   - name: Install common packages
     yum:
       name:
-        - dos2unix               #Converting dos files to unix
         - gcc                    #Required to compile Python modules
         - mlocate                #locate command
         - net-tools              #ifconfig command
@@ -45,7 +44,6 @@
       name:
         - python3
         - python3-devel
-#        - python3-setuptools
       state: latest
   - name: Install PostgreSQL
     yum:

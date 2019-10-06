@@ -1,13 +1,12 @@
 ---
 - name: Install, enable and start PostgreSQL
-  hosts: database-servers
+  hosts: database_servers
   remote_user: root
 
   tasks:
   - name: Install common packages
     yum:
       name:
-        - dos2unix               #Converting dos files to unix
         - gcc                    #Required to compile Python modules
         - mlocate                #locate command
         - net-tools              #ifconfig command
