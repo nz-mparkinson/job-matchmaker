@@ -91,11 +91,6 @@
       mode: '0644'
     notify:
     - Restart Apache
-#  - name: Set database_host in job_matchmaker.conf
-#    lineinfile:
-#      path: /var/www/python/job_matchmaker.conf
-#      insertafter: '^databaseHost:'
-#      line: 'databaseHost: $database_host'
 
   handlers:
   - name: Restart Apache
