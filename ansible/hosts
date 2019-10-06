@@ -44,7 +44,7 @@
 
 
 
-[webservers]
+[web-servers]
 host1 ansible_ssh_host=192.168.122.71
-[databaseservers]
+[database-servers]
 host2 ansible_ssh_host=192.168.122.209
