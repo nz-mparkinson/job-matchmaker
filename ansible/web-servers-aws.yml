@@ -40,13 +40,13 @@
         - postgresql-devel
       state: latest
   - name: Install Python3 modules using Pip
-    script: /usr/bin/python3 -m pip install bs4 psycopg2 PyYAML
-#    pip:
-#      executable: python3
-#      name:
-#      - bs4
-#      - psycopg2
-#      - PyYAML
+#    command: /usr/bin/python3 -m pip install bs4 psycopg2 PyYAML
+    pip:
+      executable: /usr/bin/pip3
+      name:
+      - bs4
+      - psycopg2
+      - PyYAML
   - name: Create a /var/www/python directory if it does not exist
     file:
       path: /var/www/python
@@ -62,11 +62,11 @@
       owner: apache
       group: apache
   - name: Set SELinux booleans for Apache 1
-    script: /usr/sbin/setsebool -P allow_httpd_anon_write 1
+    command: /usr/sbin/setsebool -P allow_httpd_anon_write 1
   - name: Set SELinux booleans for Apache 2
-    script: /usr/sbin/setsebool -P httpd_can_network_connect 1
+    command: /usr/sbin/setsebool -P httpd_can_network_connect 1
   - name: Set SELinux booleans for Apache 3
-    script: /usr/sbin/setsebool -P httpd_can_network_connect_db 1
+    command: /usr/sbin/setsebool -P httpd_can_network_connect_db 1
 #    seboolean:
 #      name:
 #        - allow_httpd_anon_write
@@ -75,7 +75,7 @@
 #      state: yes
 #      persistent: yes
   - name: Set SELinux context for /var/www/python
-    script: /usr/sbin/semanage fcontext -a -t httpd_sys_script_exec_t "/var/www/python(/.*)?"
+    command: /usr/sbin/semanage fcontext -a -t httpd_sys_script_exec_t "/var/www/python(/.*)?"
 #    sefcontext:
 #      target: '/var/www/python(/.*)?'
 #      setype: httpd_sys_script_exec_t
