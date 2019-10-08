@@ -1,0 +1,33 @@
+---
+- name: Install, enable and start HAProxy
+  hosts: load_balancers
+  remote_user: centos
+  become: yes
+  become_method: sudo
+
+  tasks:
+  - name: Install HAProxy
+    yum:
+      name:
+        - haproxy
+      state: latest
+  - name: Enable the HAProxy daemon and ensure it is not masked
+    systemd:
+      name: haproxy
+      enabled: yes
+      masked: no
+  - name: Start HAProxy
+    service: name=haproxy state=started
+  - name: Write HAProxy config
+    template:
+      src: haproxy.j2
+      dest: /etc/haproxy/haproxy.conf
+      owner: root
+      group: root
+      mode: '0644'
+    notify:
+    - Restart HAProxy
+
+  handlers:
+  - name: Restart HAProxy
+    service: name=haproxy state=restarted

@@ -45,14 +45,23 @@
 
 
 #Host groups
+[load_balancers]
+HAProxy1 ansible_ssh_host=ec2-18-219-14-86.us-east-2.compute.amazonaws.com
+
 [web_servers]
-host1 ansible_ssh_host=172.31.29.184
-[database_servers]
-host2 ansible_ssh_host=172.31.23.207
+Apache1 ansible_ssh_host=ec2-18-188-34-151.us-east-2.compute.amazonaws.com
+Apache2 ansible_ssh_host=ec2-13-59-169-151.us-east-2.compute.amazonaws.com
+
+#[database_servers]
+#host2 ansible_ssh_host=172.31.23.207
 
 #Host group variables
+[load_balancers:vars]
+web_server1=ec2-18-188-34-151.us-east-2.compute.amazonaws.com
+web_server2=ec2-13-59-169-151.us-east-2.compute.amazonaws.com
+
 [web_servers:vars]
-database_host=172.31.23.207
+database_host=database-1.cgipawxumi7o.us-east-2.rds.amazonaws.com
 
 
 
