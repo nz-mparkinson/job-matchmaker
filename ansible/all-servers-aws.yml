@@ -6,5 +6,12 @@
   become_method: sudo
 
   tasks:
+  - name: Install common packages
+    yum:
+      name:
+        - mlocate                #locate command
+        - net-tools              #ifconfig command
+        - vim                    #Vim
+      state: latest
   - name: Yum Update
     yum: name=* state=latest update_cache=yes

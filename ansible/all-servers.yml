@@ -4,5 +4,13 @@
   remote_user: root
 
   tasks:
+  - name: Install common packages
+    yum:
+      name:
+        - mlocate                #locate command
+        - net-tools              #ifconfig command
+        - policycoreutils-python #semanage command
+        - vim                    #Vim
+      state: latest
   - name: Yum Update
     yum: name=* state=latest update_cache=yes

@@ -10,10 +10,6 @@
     yum:
       name:
         - gcc                    #Required to compile Python modules
-        - mlocate                #locate command
-        - net-tools              #ifconfig command
-        - policycoreutils-python #semanage command
-        - vim
       state: latest
   - name: Install PostgreSQL
     yum:

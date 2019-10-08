@@ -13,10 +13,7 @@
     yum:
       name:
         - gcc                    #Required to compile Python modules
-        - mlocate                #locate command
-        - net-tools              #ifconfig command
-        - policycoreutils-python #semanage command
-        - vim
+        - policycoreutils-python #Required to set SELinux tags
       state: latest
   - name: Install Apache
     yum: name=httpd state=latest
