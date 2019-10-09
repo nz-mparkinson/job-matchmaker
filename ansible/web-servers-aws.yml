@@ -88,6 +88,23 @@
       mode: '0644'
     notify:
     - Restart Apache
+  - name: Copy app files
+    copy: src={{ item.src }} dest={{ item.dest }} owner=apache group=apache mode='0755'
+    with_items:
+      - { src: '../find_jobs.py', dest: '/var/www/python/find_jobs.py' }
+      - { src: '../helper.py', dest: '/var/www/python/helper.py' }
+      - { src: '../rate_job.py', dest: '/var/www/python/rate_job.py' }
+      - { src: '../search.css', dest: '/var/www/html/search.css' }
+      - { src: '../search.html', dest: '/var/www/html/search.html' }
+      - { src: '../search.js', dest: '/var/www/html/search.js' }
+      - { src: '../show_jobs.py', dest: '/var/www/python/show_jobs.py' }
+  - name: Copy app conf file
+    template:
+      src: job_matchmaker.j2
+      dest: /var/www/python/job_matchmaker.conf
+      owner: apache
+      group: apache
+      mode: '0755'
 
   handlers:
   - name: Restart Apache
