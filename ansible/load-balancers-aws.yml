@@ -6,6 +6,11 @@
   become_method: sudo
 
   tasks:
+  - name: Install common packages
+    yum:
+      name:
+        - policycoreutils-python #Required to set SELinux tags
+      state: latest
   - name: Install HAProxy
     yum:
       name:
@@ -18,6 +23,8 @@
       masked: no
   - name: Start HAProxy
     service: name=haproxy state=started
+  - name: Set SELinux booleans for HAProxy
+    command: /usr/sbin/setsebool -P haproxy_connect_any=1
   - name: Write HAProxy config
     template:
       src: haproxy.j2
