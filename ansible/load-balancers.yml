@@ -26,6 +26,20 @@
   - name: Configure firewalld to allow connections to HAProxy
     firewalld:
       service: http
+      zone: public
+      permanent: yes
+      immediate: yes
+      state: enabled
+  - name: Configure firewalld to allow connections to HAProxy
+    firewalld:
+      service: https
+      zone: public
+      permanent: yes
+      immediate: yes
+      state: enabled
+  - name: Configure firewalld to allow connections to HAProxy status page
+    firewalld:
+      port: 8404/tcp
       zone: trusted
       permanent: yes
       immediate: yes
