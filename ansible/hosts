@@ -44,17 +44,20 @@
 
 
 
+#Ungrouped Hosts
+Jenkins1 ansible_ssh_host=ec2-18-222-229-111.us-east-2.compute.amazonaws.com
+
+
 #Host Groups
 [load_balancers]
-HAProxy1 ansible_ssh_host=ec2-18-219-14-86.us-east-2.compute.amazonaws.com
+HAProxy1 ansible_ssh_host=ec2-18-222-229-111.us-east-2.compute.amazonaws.com
 
 [web_servers]
 Apache1 ansible_ssh_host=ec2-3-14-149-238.us-east-2.compute.amazonaws.com
 Apache2 ansible_ssh_host=ec2-18-218-14-160.us-east-2.compute.amazonaws.com
 
 #[database_servers]
-#host2 ansible_ssh_host=172.31.23.207
-
+#host2 ansible_ssh_host=ec2-18-219-14-86.us-east-2.compute.amazonaws.com
 
 
 #Host Group Variables
