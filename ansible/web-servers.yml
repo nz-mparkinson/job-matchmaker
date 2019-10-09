@@ -113,10 +113,10 @@
   - name: Copy app conf file
     template:
       src: job_matchmaker.j2
-      dest: /var/www/python/job_matchmaker.conf
+      dest: /etc/job_matchmaker.conf
       owner: apache
       group: apache
-      mode: '0755'
+      mode: '0400'
 
   handlers:
   - name: Restart Apache

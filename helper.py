@@ -6,7 +6,7 @@ import psycopg2
 import yaml
 
 #Declare static values
-configFile = "job_matchmaker.conf"	#TODO use "/etc/job_matchmaker.conf"
+configFile = "/etc/job_matchmaker.conf"
 
 #Declare the database connection settings with default values
 databaseHost = "127.0.0.1"
