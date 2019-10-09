@@ -21,7 +21,7 @@
   - name: Write HAProxy config
     template:
       src: haproxy.j2
-      dest: /etc/haproxy/haproxy.conf
+      dest: /etc/haproxy/haproxy.cfg
       owner: root
       group: root
       mode: '0644'
