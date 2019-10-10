@@ -77,7 +77,7 @@ resource "aws_instance" "apache1" {
   instance_type = "t2.micro"
   key_name      = "aws-key-pair"
   tags = {
-    Name = "apache1"
+    Name = "web_servers"
   }
   root_block_device {
     delete_on_termination = "true"
@@ -92,7 +92,7 @@ resource "aws_instance" "apache2" {
   instance_type = "t2.micro"
   key_name      = "aws-key-pair"
   tags = {
-    Name = "apache2"
+    Name = "web_servers"
   }
   root_block_device {
     delete_on_termination = "true"
@@ -107,7 +107,7 @@ resource "aws_instance" "apache3" {
   instance_type = "t2.micro"
   key_name      = "aws-key-pair"
   tags = {
-    Name = "apache3"
+    Name = "web_servers"
   }
   root_block_device {
     delete_on_termination = "true"
