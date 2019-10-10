@@ -221,6 +221,7 @@ resource "aws_db_instance" "postgresql1" {
   identifier           = "postgresql1"
 #  publicly_accessible  = "true"
   publicly_accessible  = "false"
+  backup_retention_period = 3
   skip_final_snapshot  = "true"
 
   vpc_security_group_ids = ["${aws_security_group.terraform_security_group.id}"]
