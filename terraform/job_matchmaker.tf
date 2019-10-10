@@ -1,3 +1,4 @@
+#Define the AWS provider
 provider "aws" {
   profile    = "default"
   region     = "us-east-1"
@@ -5,9 +6,67 @@ provider "aws" {
 
 
 
+#Define a Security Group
+resource "aws_security_group" "terraform_security_group" {
+  name        = "terraform_security_group"
+  description = "Terraform Security Group"
+
+  tags = {
+    Name = "terraform_security_group"
+  }
+}
+
+#Define Security Group egress rules
+resource "aws_security_group_rule" "egress_allow_all" {
+  type            = "egress"
+  from_port       = 0
+  to_port         = 65535
+  protocol        = "tcp"
+  cidr_blocks     = ["0.0.0.0/0"]
+  description     = "Allow all inbound"
+
+  security_group_id = "${aws_security_group.terraform_security_group.id}"
+}
+
+#Define Security Group ingress rules
+resource "aws_security_group_rule" "ingress_allow_all_internal" {
+  type            = "ingress"
+  from_port       = 0
+  to_port         = 65535
+  protocol        = "all"
+  source_security_group_id = "${aws_security_group.terraform_security_group.id}"
+  description     = "Allow All inbound internal"
+
+  security_group_id = "${aws_security_group.terraform_security_group.id}"
+}
+
+resource "aws_security_group_rule" "ingress_allow_http" {
+  type            = "ingress"
+  from_port       = 80
+  to_port         = 80
+  protocol        = "tcp"
+  cidr_blocks     = ["0.0.0.0/0"]
+  description     = "Allow HTTP inbound"
+
+  security_group_id = "${aws_security_group.terraform_security_group.id}"
+}
+
+resource "aws_security_group_rule" "ingress_allow_ssh" {
+  type            = "ingress"
+  from_port       = 22
+  to_port         = 22
+  protocol        = "tcp"
+  cidr_blocks     = ["0.0.0.0/0"]
+  description     = "Allow SSH inbound"
+
+  security_group_id = "${aws_security_group.terraform_security_group.id}"
+}
+
+
+
 #Define a EC2 Instance
 resource "aws_instance" "apache1" {
-  ami           = "ami-02eac2c0129f6376b"
+  ami           = "ami-02eac2c0129f6376b"          #CentOS7 - us-east-1
   instance_type = "t2.micro"
   key_name      = "aws-key-pair"
   tags = {
@@ -16,11 +75,13 @@ resource "aws_instance" "apache1" {
   root_block_device {
     delete_on_termination = "true"
   }
+
+  security_groups = ["${aws_security_group.terraform_security_group.name}"]
 }
 
 #Define a EC2 Instance
 resource "aws_instance" "apache2" {
-  ami           = "ami-02eac2c0129f6376b"
+  ami           = "ami-02eac2c0129f6376b"          #CentOS7 - us-east-1
   instance_type = "t2.micro"
   key_name      = "aws-key-pair"
   tags = {
@@ -29,11 +90,13 @@ resource "aws_instance" "apache2" {
   root_block_device {
     delete_on_termination = "true"
   }
+
+  security_groups = ["${aws_security_group.terraform_security_group.name}"]
 }
 
 #Define a EC2 Instance
 resource "aws_instance" "apache3" {
-  ami           = "ami-02eac2c0129f6376b"
+  ami           = "ami-02eac2c0129f6376b"          #CentOS7 - us-east-1
   instance_type = "t2.micro"
   key_name      = "aws-key-pair"
   tags = {
@@ -42,6 +105,8 @@ resource "aws_instance" "apache3" {
   root_block_device {
     delete_on_termination = "true"
   }
+
+  security_groups = ["${aws_security_group.terraform_security_group.name}"]
 }
 
 
@@ -127,6 +192,8 @@ resource "aws_elb" "loadbalancer1" {
   tags = {
     Name = "loadbalancer1"
   }
+
+  security_groups = ["${aws_security_group.terraform_security_group.id}"]
 }
 
 
@@ -148,6 +215,8 @@ resource "aws_db_instance" "postgresql1" {
 #  publicly_accessible  = "true"
   publicly_accessible  = "false"
   skip_final_snapshot  = "true"
+
+  vpc_security_group_ids = ["${aws_security_group.terraform_security_group.id}"]
 }
 
 

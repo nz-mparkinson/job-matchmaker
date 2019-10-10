@@ -16,6 +16,8 @@ Indeed multi search, allows rating of jobs, hides rated jobs by default
  * su postgres -
  * psql
  * CREATE DATABASE job_matchmaker;
+ * CREATE USER job_matchmaker WITH PASSWORD 'job_matchmaker';
+ * GRANT ALL PRIVILEGES ON DATABASE job_matchmaker TO job_matchmaker;
  * \q
  * exit
 
