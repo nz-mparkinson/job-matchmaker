@@ -139,16 +139,20 @@ resource "aws_db_instance" "postgresql1" {
   engine_version       = "11.5"
   instance_class       = "db.t2.micro"
   name                 = "job_matchmaker"
-  username             = "postgres"
-  password             = "postgres"
+#  username             = "postgres"
+#  password             = "postgres"
+  username             = "job_matchmaker"
+  password             = "job_matchmaker"
   parameter_group_name = "default.postgres11"
   identifier           = "postgresql1"
-  publicly_accessible  = "true"
+#  publicly_accessible  = "true"
+  publicly_accessible  = "false"
   skip_final_snapshot  = "true"
 }
 
 
 
+/*
 #Configure the PostgreSQL provider
 provider "postgresql" {
   host = "${aws_db_instance.postgresql1.address}"
@@ -181,8 +185,7 @@ resource postgresql_grant "job_matchmaker" {
 
   depends_on  = ["aws_db_instance.postgresql1", "postgresql_role.job_matchmaker"]
 }
-
-
+*/
 
 
 
