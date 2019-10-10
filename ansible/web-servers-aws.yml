@@ -21,7 +21,7 @@
 
 - name: Install, enable and start Apache
 #  hosts: web_servers
-  hosts: tag_Name_web_servers
+  hosts: web_servers
   remote_user: centos
   become: yes
   become_method: sudo

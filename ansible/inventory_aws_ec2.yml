@@ -1,45 +1,11 @@
-# Example using constructed features to create groups and set ansible_host
+#Create an inventory using the aws_ec2 plugin for the us-east-1 region
 plugin: aws_ec2
 regions:
   - us-east-1
 
-# keyed_groups may be used to create custom groups
-strict: False
+#Create groups based on a key value
 keyed_groups:
-  # Add e.g. x86_64 hosts to an arch_x86_64 group
-  - prefix: arch
-    key: 'architecture'
-  # Add hosts to tag_Name_Value groups for each Name/Value tag pair
-  - prefix: tag
-    key: tags
-    vars:
-      database_host: "postgresql1.cvgbhucgznbj.us-east-1.rds.amazonaws.com"
-  # Add hosts to e.g. instance_type_z3_tiny
-  - prefix: instance_type
-    key: instance_type
-  # Create security_groups_sg_abcd1234 group for each SG
-  - key: 'security_groups|json_query("[].group_id")'
-    prefix: 'security_groups'
-  # Create a group for each value of the Application tag
-  - key: tags.Application
-    separator: ''
-  # Create a group per region e.g. aws_region_us_east_2
-  - key: placement.region
-    prefix: aws_region
-
-#groups:
-  #Add hosts to the web_servers group if any of the dictionary's keys or values is the word 'web_servers'
-#  web_servers: "'web_servers' in (tags|list)"
-
-# Set individual variables with compose
-#compose:
-#  database_host: postgresql1.cvgbhucgznbj.us-east-1.rds.amazonaws.com
-
-#Set the database_host variable for the web_servers group
-#tag_Name_web_servers:
-#  vars:
-#    database_host: "postgresql1.cvgbhucgznbj.us-east-1.rds.amazonaws.com"
-
-#set_fact: database_host="postgresql1.cvgbhucgznbj.us-east-1.rds.amazonaws.com"
-#tag_Name_web_servers:
-#  set_fact: database_host="postgresql1.cvgbhucgznbj.us-east-1.rds.amazonaws.com"
+  #Add hosts to tag_Name_value groups for each aws_ec2 host's tags.Name variable
+  - key: tags.Name
+    prefix: ''
+    separator: ""
