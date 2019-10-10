@@ -3,6 +3,8 @@ provider "aws" {
   region     = "us-east-1"
 }
 
+
+
 #Define a EC2 Instance
 resource "aws_instance" "apache1" {
   ami           = "ami-02eac2c0129f6376b"
@@ -42,21 +44,7 @@ resource "aws_instance" "apache3" {
   }
 }
 
-#Define a RDS Instance
-resource "aws_db_instance" "postgresql1" {
-  allocated_storage    = 20
-  storage_type         = "gp2"
-  engine               = "postgres"
-  engine_version       = "11.5"
-  instance_class       = "db.t2.micro"
-  name                 = "job_matchmaker"
-  username             = "postgres"
-  password             = "postgres"
-  parameter_group_name = "default.postgres11"
-  identifier           = "postgresql1"
-  publicly_accessible  = "true"
-  skip_final_snapshot  = "true"
-}
+
 
 #Get the details of the AWS service account
 data "aws_elb_service_account" "main" {}
@@ -130,6 +118,7 @@ resource "aws_elb" "loadbalancer1" {
   }
 
   instances                   = ["${aws_instance.apache1.id}", "${aws_instance.apache2.id}", "${aws_instance.apache3.id}"]
+#  instances                   = ["${aws_instance.apache1.id}"]
   cross_zone_load_balancing   = true
   idle_timeout                = 400
   connection_draining         = true
@@ -142,9 +131,24 @@ resource "aws_elb" "loadbalancer1" {
 
 
 
+#Define a RDS Instance, creating the job_matchmaker database
+resource "aws_db_instance" "postgresql1" {
+  allocated_storage    = 20
+  storage_type         = "gp2"
+  engine               = "postgres"
+  engine_version       = "11.5"
+  instance_class       = "db.t2.micro"
+  name                 = "job_matchmaker"
+  username             = "postgres"
+  password             = "postgres"
+  parameter_group_name = "default.postgres11"
+  identifier           = "postgresql1"
+  publicly_accessible  = "true"
+  skip_final_snapshot  = "true"
+}
 
 
-/*
+
 #Configure the PostgreSQL provider
 provider "postgresql" {
   host = "${aws_db_instance.postgresql1.address}"
@@ -152,7 +156,9 @@ provider "postgresql" {
   password = "postgres"
   connect_timeout = 15
   sslmode = "require"
-  superuser = "true"
+  superuser = "false"
+
+#  depends_on  = ["aws_db_instance.postgresql1"]      #TODO reserved for future release of Terraform, uncomment then
 }
 
 #Define a PostgreSQL user
@@ -160,15 +166,9 @@ resource "postgresql_role" "job_matchmaker" {
   name     = "job_matchmaker"
   login    = true
   password = "job_matchmaker"
-#  encrypted_password = true
-}
+  skip_reassign_owned = true		#Required otherwise error on destroy
 
-#Define a PostgreSQL database
-resource "postgresql_database" "job_matchmaker" {
-  name              = "job_matchmaker"
-  owner             = "job_matchmaker"
-  connection_limit  = -1
-  allow_connections = true
+  depends_on  = ["aws_db_instance.postgresql1"]
 }
 
 #Grant a PostgreSQL user privileges on a database
@@ -178,8 +178,9 @@ resource postgresql_grant "job_matchmaker" {
   schema      = "public"
   object_type = "sequence"
   privileges  = ["ALL"]
+
+  depends_on  = ["aws_db_instance.postgresql1", "postgresql_role.job_matchmaker"]
 }
-*/
 
 
 

@@ -53,9 +53,9 @@
 #HAProxy1 ansible_ssh_host=ec2-18-222-229-111.us-east-2.compute.amazonaws.com
 
 [web_servers]
-Apache1 ansible_ssh_host=ec2-54-172-114-2.compute-1.amazonaws.com
-Apache2 ansible_ssh_host=ec2-18-212-6-203.compute-1.amazonaws.com
-Apache3 ansible_ssh_host=ec2-18-207-204-112.compute-1.amazonaws.com
+Apache1 ansible_ssh_host=ec2-52-23-210-50.compute-1.amazonaws.com
+Apache2 ansible_ssh_host=ec2-35-173-124-3.compute-1.amazonaws.com
+Apache3 ansible_ssh_host=ec2-3-87-209-37.compute-1.amazonaws.com
 
 #[database_servers]
 #host2 ansible_ssh_host=ec2-18-219-14-86.us-east-2.compute.amazonaws.com
