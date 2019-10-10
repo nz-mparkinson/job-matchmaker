@@ -8,36 +8,25 @@
       region: "us-east-1"
 #      db_instance_identifier: postgresql1
     register: rds_instances
-#  - name: Debug
-#    debug:
-#        msg: "{{ rds_instances['instances'][0]['endpoint']['address'] }}"
   - name: Set database_host fact
     set_fact:
-#      cacheable: yes
       database_host: "{{ rds_instances['instances'][0]['endpoint']['address'] }}"
-#  - name: Debug2
-#    debug:
-#        msg: "{{ database_host }}"
 
 - name: Install, enable and start Apache
-#  hosts: web_servers
   hosts: web_servers
   remote_user: centos
   become: yes
   become_method: sudo
   vars:
-#    database_host: "postgresql1.cvgbhucgznbj.us-east-1.rds.amazonaws.com"
     http_port: 80
     max_clients: 200
 
   tasks:
-  - name: Debug3
-    debug:
-#        msg: "{{ database_host }}"
-        msg: "{{ hostvars['localhost']['database_host'] }}"
-  - name: Set database_host fact again
+#  - name: Debug, print localhost database_host variable
+#    debug:
+#        msg: "{{ hostvars['localhost']['database_host'] }}"
+  - name: Set database_host fact
     set_fact:
-#      cacheable: yes
       database_host: "{{ hostvars['localhost']['database_host'] }}"
   - name: Install common packages
     yum:
