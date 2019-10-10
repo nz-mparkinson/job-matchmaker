@@ -71,7 +71,7 @@ variable "image_id" {
 #  default = "ami-0f2b4fc905b0bd1f1"          #CentOS7 - us-east-2
 }
 
-#Define a EC2 Instance
+#Define a EC2 Instances
 resource "aws_instance" "apache1" {
   ami           = var.image_id
   instance_type = "t2.micro"
@@ -86,7 +86,6 @@ resource "aws_instance" "apache1" {
   security_groups = ["${aws_security_group.terraform_security_group.name}"]
 }
 
-#Define a EC2 Instance
 resource "aws_instance" "apache2" {
   ami           = var.image_id
   instance_type = "t2.micro"
@@ -101,7 +100,6 @@ resource "aws_instance" "apache2" {
   security_groups = ["${aws_security_group.terraform_security_group.name}"]
 }
 
-#Define a EC2 Instance
 resource "aws_instance" "apache3" {
   ami           = var.image_id
   instance_type = "t2.micro"
