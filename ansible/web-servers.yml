@@ -12,6 +12,7 @@
       name:
         - gcc                    #Required to compile Python modules
         - policycoreutils-python #Required to set SELinux tags
+        - python-setuptools      #Required by CentOS 7 1810 to install Python3 modules using the pip Anisble module
       state: latest
   - name: Install Apache
     yum: name=httpd state=latest
@@ -109,12 +110,12 @@
     with_items:
       - { src: '../find_jobs.py', dest: '/var/www/python/find_jobs.py' }
       - { src: '../helper.py', dest: '/var/www/python/helper.py' }
-      - { src: '../helper.py', dest: '/home/centos/helper.py' }
+      - { src: '../helper.py', dest: '/root/helper.py' }
       - { src: '../rate_job.py', dest: '/var/www/python/rate_job.py' }
       - { src: '../search.css', dest: '/var/www/html/search.css' }
       - { src: '../search.html', dest: '/var/www/html/search.html' }
       - { src: '../search.js', dest: '/var/www/html/search.js' }
-      - { src: '../setup_database.py', dest: '/home/centos/setup_database.py' }
+      - { src: '../setup_database.py', dest: '/root/setup_database.py' }
       - { src: '../show_jobs.py', dest: '/var/www/python/show_jobs.py' }
   - name: Copy app conf file
     template:
@@ -124,7 +125,7 @@
       group: apache
       mode: '0400'
   - name: Ensure the database is setup
-    command: /usr/bin/python3 /home/centos/setup_database.py
+    command: /usr/bin/python3 /root/setup_database.py
 
   handlers:
   - name: Restart Apache
