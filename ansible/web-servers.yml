@@ -71,31 +71,25 @@
       owner: apache
       group: apache
   - name: Set SELinux boolean to allow Apache to read/write
-#    command: /usr/sbin/setsebool -P allow_httpd_anon_write 1
     seboolean:
       name: allow_httpd_anon_write
       state: yes
       persistent: yes
   - name: Set SELinux boolean to allow Apache to network connect
-#    command: /usr/sbin/setsebool -P httpd_can_network_connect 1
     seboolean:
       name: httpd_can_network_connect
       state: yes
       persistent: yes
   - name: Set SELinux boolean to allow Apache to network connect to a database
-#    command: /usr/sbin/setsebool -P httpd_can_network_connect_db 1
     seboolean:
       name: httpd_can_network_connect_db
       state: yes
       persistent: yes
   - name: Set SELinux context for /var/www/python
-#    command: /usr/sbin/semanage fcontext -a -t httpd_sys_script_exec_t "/var/www/python(/.*)?"
     sefcontext:
       target: '/var/www/python(/.*)?'
       setype: httpd_sys_script_exec_t
       state: present
-#  - name: Apply new SELinux file context to filesystem
-#    command: restorecon -irv /var/www/python
   - name: Write Apache config for Python
     template:
       src: python.j2
