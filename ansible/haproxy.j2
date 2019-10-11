@@ -83,6 +83,7 @@ listen  http_web *:80
     balance roundrobin  # Load Balancing algorithm
     option httpchk
     option forwardfor
-    server Apache1 {{ web_server1 }}:80 weight 1 maxconn 512 check
-    server Apache2 {{ web_server2 }}:80 weight 1 maxconn 512 check
+    server web_server1 {{ web_server1 }}:80 weight 1 maxconn 512 check
+    server web_server2 {{ web_server2 }}:80 weight 1 maxconn 512 check
+    server web_server3 {{ web_server3 }}:80 weight 1 maxconn 512 check
 
