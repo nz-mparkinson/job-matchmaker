@@ -13,8 +13,9 @@
   - name: Setup the Jenkins repo
     yum_repository:
       name: jenkins
-      description: Jenkins YUM repo
-      baseurl: http://pkg.jenkins-ci.org/redhat/jenkins.repo
+      description: Jenkins
+      baseurl: http://pkg.jenkins.io/redhat
+      gpgcheck: yes
   - name: Install Jenkins and its prerequisites
     yum:
       name:
