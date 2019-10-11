@@ -1,5 +1,5 @@
 ---
-- name: Install all package updates
+- name: Install common packages and make sure the system is up to date
   hosts: all
   remote_user: root
 
@@ -9,8 +9,7 @@
       name:
         - mlocate                #locate command
         - net-tools              #ifconfig command
-        - policycoreutils-python #semanage command
         - vim                    #Vim
       state: latest
-  - name: Yum Update
+  - name: Update installed packages
     yum: name=* state=latest update_cache=yes

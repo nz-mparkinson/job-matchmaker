@@ -1,5 +1,5 @@
 ---
-- name: Install, enable and start Apache
+- name: Install Apache, integrate it with Python and setup the job_matchmaker app
   hosts: web_servers
   remote_user: root
   vars:
@@ -49,7 +49,6 @@
         - postgresql-devel
       state: latest
   - name: Install Python3 modules using Pip
-#    command: /usr/bin/python3 -m pip install bs4 psycopg2 PyYAML
     pip:
       executable: /usr/bin/pip3
       name:

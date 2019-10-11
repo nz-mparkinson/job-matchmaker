@@ -1,18 +1,18 @@
 ---
-- name: Get RDS instance info
+- name: Get the AWS RDS instance info
   hosts: localhost
 
   tasks:
-  - name: Get info
+  - name: Get the RDS instance info
     rds_instance_facts:
       region: "us-east-1"
 #      db_instance_identifier: postgresql1
     register: rds_instances
-  - name: Set database_host fact
+  - name: Set the database_host fact
     set_fact:
       database_host: "{{ rds_instances['instances'][0]['endpoint']['address'] }}"
 
-- name: Install, enable and start Apache
+- name: Install Apache, integrate it with Python and setup the job_matchmaker app
   hosts: web_servers
   remote_user: centos
   become: yes
@@ -56,7 +56,6 @@
         - postgresql-devel
       state: latest
   - name: Install Python3 modules using Pip
-#    command: /usr/bin/python3 -m pip install bs4 psycopg2 PyYAML
     pip:
       executable: /usr/bin/pip3
       name:

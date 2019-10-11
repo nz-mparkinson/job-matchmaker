@@ -1,23 +1,16 @@
 ---
-- name: Install, enable and start Jenkins
+- name: Install Jenkins
   hosts: Jenkins1
   remote_user: root
 
   tasks:
-#  - name: Install common packages
-#    yum:
-#      name:
-#        - wget                   #Required to setup the Jenkins repo
-#      state: latest
   - name: Enable the EPEL Repo
     yum: name=epel-release state=latest
   - name: Import Jenkins key
-#    command: rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key
     rpm_key:
       state: present
       key: https://jenkins-ci.org/redhat/jenkins-ci.org.key
   - name: Setup the Jenkins repo
-#    command: wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
     yum_repository:
       name: jenkins
       description: Jenkins YUM repo
@@ -49,15 +42,6 @@
       permanent: yes
       immediate: yes
       state: enabled
-#  - name: Write Jenkins config
-#    template:
-#      src: jenkins.j2
-#      dest: /etc/jenkins/jenkins.conf
-#      owner: root
-#      group: root
-#      mode: '0644'
-#    notify:
-#    - Restart Jenkins
 
   handlers:
   - name: Restart Jenkins

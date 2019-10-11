@@ -1,5 +1,5 @@
 ---
-- name: Install, enable and start HAProxy
+- name: Install HAProxy
   hosts: load_balancers
   remote_user: centos
   become: yes
