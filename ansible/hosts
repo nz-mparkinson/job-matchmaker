@@ -45,6 +45,7 @@
 
 
 #Ungrouped Hosts
+Docker1 ansible_ssh_host=192.168.122.3
 Jenkins1 ansible_ssh_host=192.168.122.2
 
 
