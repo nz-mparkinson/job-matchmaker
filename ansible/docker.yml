@@ -1,6 +1,6 @@
 ---
 - name: Install Docker
-  hosts: Docker1
+  hosts: docker
   remote_user: root
 
   tasks:

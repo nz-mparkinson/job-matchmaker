@@ -1,6 +1,6 @@
 ---
 - name: Install Jenkins
-  hosts: Jenkins1
+  hosts: jenkins
   remote_user: root
 
   tasks:

@@ -45,11 +45,15 @@
 
 
 #Ungrouped Hosts
-Docker1 ansible_ssh_host=192.168.122.3
-Jenkins1 ansible_ssh_host=192.168.122.2
 
 
 #Host Groups
+[docker]
+docker1 ansible_ssh_host=192.168.122.2
+
+[jenkins]
+jenkins1 ansible_ssh_host=192.168.122.2
+
 [load_balancers]
 load_balancer1 ansible_ssh_host=192.168.122.11
 
