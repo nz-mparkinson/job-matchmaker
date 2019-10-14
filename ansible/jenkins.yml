@@ -19,6 +19,7 @@
   - name: Install Jenkins and its prerequisites
     yum:
       name:
+        - git
         - java-1.8.0-openjdk
         - jenkins
       state: latest
