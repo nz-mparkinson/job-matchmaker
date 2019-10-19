@@ -15,3 +15,9 @@ variable "amis" {
   description = "A map of what AMI to use depending on the AWS region"
 }
 
+#Define the number of AWS EC2 instances to use 
+variable "web_server_count" {
+  type    = number
+  default = 3
+  description = "The number of AWS EC2 instances used"
+}

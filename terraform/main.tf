@@ -65,7 +65,7 @@ resource "aws_security_group_rule" "ingress_allow_ssh" {
 
 
 #Define a EC2 Instances
-resource "aws_instance" "apache1" {
+resource "aws_instance" "web_server" {
   ami           = var.amis[var.region]
   instance_type = "t2.micro"
   key_name      = "aws-key-pair"
@@ -77,34 +77,9 @@ resource "aws_instance" "apache1" {
   }
 
   security_groups = ["${aws_security_group.terraform_security_group.name}"]
-}
 
-resource "aws_instance" "apache2" {
-  ami           = var.amis[var.region]
-  instance_type = "t2.micro"
-  key_name      = "aws-key-pair"
-  tags = {
-    Name = "web_servers"
-  }
-  root_block_device {
-    delete_on_termination = "true"
-  }
-
-  security_groups = ["${aws_security_group.terraform_security_group.name}"]
-}
-
-resource "aws_instance" "apache3" {
-  ami           = var.amis[var.region]
-  instance_type = "t2.micro"
-  key_name      = "aws-key-pair"
-  tags = {
-    Name = "web_servers"
-  }
-  root_block_device {
-    delete_on_termination = "true"
-  }
-
-  security_groups = ["${aws_security_group.terraform_security_group.name}"]
+  #Create x number of EC2 instances
+  count = var.web_server_count
 }
 
 
@@ -148,7 +123,7 @@ POLICY
 #Define a EC2 Load Balancer
 resource "aws_elb" "loadbalancer1" {
   name               = "loadbalancer1"
-  availability_zones = ["us-east-1a", "us-east-1b", "us-east-1c", "us-east-1d", "us-east-1e", "us-east-1f"]
+  availability_zones = "${aws_instance.web_server.*.availability_zone}"
 
   access_logs {
     bucket        = "job-matchmaker-storage1"
@@ -180,8 +155,7 @@ resource "aws_elb" "loadbalancer1" {
     interval            = 30
   }
 
-  instances                   = ["${aws_instance.apache1.id}", "${aws_instance.apache2.id}", "${aws_instance.apache3.id}"]
-#  instances                   = ["${aws_instance.apache1.id}"]
+  instances                   = "${aws_instance.web_server.*.id}"
   cross_zone_load_balancing   = true
   idle_timeout                = 400
   connection_draining         = true
