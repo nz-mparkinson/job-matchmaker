@@ -1,7 +1,7 @@
 #Define the AWS provider
 provider "aws" {
   profile    = "default"
-  region     = "us-east-1"
+  region     = var.region
 }
 
 
@@ -64,16 +64,9 @@ resource "aws_security_group_rule" "ingress_allow_ssh" {
 
 
 
-#Define what image to use for EC2 instances
-variable "image_id" {
-  type = string
-  default = "ami-02eac2c0129f6376b"          #CentOS7 - us-east-1
-#  default = "ami-0f2b4fc905b0bd1f1"          #CentOS7 - us-east-2
-}
-
 #Define a EC2 Instances
 resource "aws_instance" "apache1" {
-  ami           = var.image_id
+  ami           = var.amis[var.region]
   instance_type = "t2.micro"
   key_name      = "aws-key-pair"
   tags = {
@@ -87,7 +80,7 @@ resource "aws_instance" "apache1" {
 }
 
 resource "aws_instance" "apache2" {
-  ami           = var.image_id
+  ami           = var.amis[var.region]
   instance_type = "t2.micro"
   key_name      = "aws-key-pair"
   tags = {
@@ -101,7 +94,7 @@ resource "aws_instance" "apache2" {
 }
 
 resource "aws_instance" "apache3" {
-  ami           = var.image_id
+  ami           = var.amis[var.region]
   instance_type = "t2.micro"
   key_name      = "aws-key-pair"
   tags = {
