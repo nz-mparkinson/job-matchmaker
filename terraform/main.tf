@@ -64,8 +64,8 @@ resource "aws_security_group_rule" "ingress_allow_ssh" {
 
 
 
-#Define a EC2 Instances
-resource "aws_instance" "web_server" {
+#Define a number of EC2 Instances
+resource "aws_instance" "web_servers" {
   ami           = var.amis[var.region]
   instance_type = "t2.micro"
   key_name      = "aws-key-pair"
@@ -78,7 +78,7 @@ resource "aws_instance" "web_server" {
 
   security_groups = ["${aws_security_group.terraform_security_group.name}"]
 
-  #Create x number of EC2 instances
+  #Create a number of EC2 instances
   count = var.web_server_count
 }
 
@@ -120,10 +120,12 @@ resource "aws_s3_bucket" "storage1" {
 POLICY
 }
 
+
+
 #Define a EC2 Load Balancer
 resource "aws_elb" "loadbalancer1" {
   name               = "loadbalancer1"
-  availability_zones = "${aws_instance.web_server.*.availability_zone}"
+  availability_zones = "${aws_instance.web_servers.*.availability_zone}"
 
   access_logs {
     bucket        = "job-matchmaker-storage1"
@@ -132,7 +134,6 @@ resource "aws_elb" "loadbalancer1" {
   }
 
   listener {
-#    instance_port     = 8000
     instance_port     = 80
     instance_protocol = "http"
     lb_port           = 80
@@ -155,7 +156,7 @@ resource "aws_elb" "loadbalancer1" {
     interval            = 30
   }
 
-  instances                   = "${aws_instance.web_server.*.id}"
+  instances                   = "${aws_instance.web_servers.*.id}"
   cross_zone_load_balancing   = true
   idle_timeout                = 400
   connection_draining         = true
@@ -178,56 +179,16 @@ resource "aws_db_instance" "postgresql1" {
   engine_version       = "11.5"
   instance_class       = "db.t2.micro"
   name                 = "job_matchmaker"
-#  username             = "postgres"
-#  password             = "postgres"
   username             = "job_matchmaker"
   password             = "job_matchmaker"
   parameter_group_name = "default.postgres11"
   identifier           = "postgresql1"
-#  publicly_accessible  = "true"
   publicly_accessible  = "false"
   backup_retention_period = 3
   skip_final_snapshot  = "true"
 
   vpc_security_group_ids = ["${aws_security_group.terraform_security_group.id}"]
 }
-
-
-
-/*
-#Configure the PostgreSQL provider
-provider "postgresql" {
-  host = "${aws_db_instance.postgresql1.address}"
-  username = "postgres"
-  password = "postgres"
-  connect_timeout = 15
-  sslmode = "require"
-  superuser = "false"
-
-#  depends_on  = ["aws_db_instance.postgresql1"]      #TODO reserved for future release of Terraform, uncomment then
-}
-
-#Define a PostgreSQL user
-resource "postgresql_role" "job_matchmaker" {
-  name     = "job_matchmaker"
-  login    = true
-  password = "job_matchmaker"
-  skip_reassign_owned = true		#Required otherwise error on destroy
-
-  depends_on  = ["aws_db_instance.postgresql1"]
-}
-
-#Grant a PostgreSQL user privileges on a database
-resource postgresql_grant "job_matchmaker" {
-  database    = "job_matchmaker"
-  role        = "job_matchmaker"
-  schema      = "public"
-  object_type = "sequence"
-  privileges  = ["ALL"]
-
-  depends_on  = ["aws_db_instance.postgresql1", "postgresql_role.job_matchmaker"]
-}
-*/
 
 
 

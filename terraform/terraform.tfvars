@@ -1,2 +1,2 @@
 region = "us-east-1"
-web_server_count = 3
+web_server_count = 5

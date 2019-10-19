@@ -1,4 +1,4 @@
-#Output the region
+#Output the region used
 output "region" {
   value = var.region
   description = "The AWS region used"
