@@ -21,5 +21,15 @@ Indeed multi search, allows rating of jobs, hides rated jobs by default
  * \q
  * exit
 
+## Docker
+
+ * docker run --privileged=true -p 81:80 -d job-matchmaker
+
+## Jenkins Job
+
+ * whoami && \
+ * pwd && \
+ * docker build . --rm --no-cache=true -t job-matchmaker:${BUILD_NUMBER}
+
 
 

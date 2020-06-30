@@ -61,7 +61,7 @@
       - bs4
       - psycopg2
       - PyYAML
-  - name: Create a /var/www/python directory if it does not exist
+  - name: Create the /var/www/python directory if it does not exist
     file:
       path: /var/www/python
       owner: apache
